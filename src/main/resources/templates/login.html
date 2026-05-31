@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Acceso Clientes</title>
+    <title>NovaTech - Área Privada</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #e9ecef; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: 'Segoe UI', sans-serif; }
@@ -43,26 +43,26 @@
         </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <script th:if="${accesoDenegado}">
-        Swal.fire({
-            icon: 'error',
-            title: 'Acceso Denegado',
-            text: '[[${accesoDenegado}]]',
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'Volver a intentar'
-        });
-    </script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	    
+	    <script th:if="${param.error}">
+	        Swal.fire({
+	            icon: 'error',
+	            title: 'Datos incorrectos',
+	            text: 'El correo o la contraseña no son correctos.',
+	            confirmButtonColor: '#d33',
+	            confirmButtonText: 'Volver a intentar'
+	        });
+	    </script>
 
-    <script th:if="${necesitaLogin}">
-        Swal.fire({
-            icon: 'info',
-            title: '¡Paso previo!',
-            text: '[[${necesitaLogin}]]',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Entendido'
-        });
-    </script>
+	    <script th:if="${accesoDenegado != null}">
+	        Swal.fire({
+	            icon: 'error',
+	            title: 'Acceso Denegado',
+	            text: '[[${accesoDenegado}]]',
+	            confirmButtonColor: '#d33',
+	            confirmButtonText: 'Volver a intentar'
+	        });
+	    </script>
 </body>
 </html>
