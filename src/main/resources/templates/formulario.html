@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--Página para añadir cosas nuevas sin tocar la base de datos-->
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -17,14 +16,17 @@
             <h3 class="text-center mb-4 fw-bold" style="color: #2a5298;" th:text="${producto.id == null ? 'Crear Producto' : 'Editar Producto'}">Crear Producto</h3>
             <form th:action="@{/admin/guardar}" th:object="${producto}" method="post">
 				<input type="hidden" name="id" th:value="${producto.id}">
+                
                 <div class="mb-3">
                     <label class="form-label fw-bold">Nombre</label>
                     <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ej: Portátil MSI" required>
                 </div>
+                
                 <div class="mb-3">
                     <label class="form-label fw-bold">Descripción Corta</label>
                     <textarea th:field="*{descripcion}" class="form-control" rows="2" placeholder="Características principales..."></textarea>
                 </div>
+                
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Precio (€)</label>
@@ -35,10 +37,18 @@
                         <input type="text" class="form-control" placeholder="Electrónica">
                     </div>
                 </div>
-                <div class="mb-4">
-                    <label class="form-label fw-bold">URL de la Imagen</label>
-                    <input type="text" th:field="*{imagen}" class="form-control" placeholder="https://enlace-foto.jpg">
+                
+                <div class="row">
+                    <div class="col-md-8 mb-4">
+                        <label class="form-label fw-bold">URL de la Imagen</label>
+                        <input type="text" th:field="*{imagen}" class="form-control" placeholder="https://enlace-foto.jpg">
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label fw-bold">Valoración (★)</label>
+                        <input type="number" step="0.1" min="1" max="5" th:field="*{valoracion}" class="form-control" placeholder="Ej: 4.5">
+                    </div>
                 </div>
+
 				<button type="submit" class="btn btn-success btn-lg w-100" 
 				        th:text="${producto.id == null ? 'Registrar en Base de Datos' : 'Guardar Cambios'}">
 				</button>

@@ -16,22 +16,29 @@
             <div class="col-md-8">
                 <div class="card p-4 shadow-sm border-0 mb-4">
                     <h4 class="fw-bold mb-3">📍 Datos de Envío</h4>
+                    
                     <form id="formPago">
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Dirección de Entrega</label>
                             <input type="text" class="form-control" placeholder="Calle, número, piso..." required>
                         </div>
-                        <div class="row">
-                            <div class="col"><input type="text" class="form-control" placeholder="Ciudad"></div>
-                            <div class="col"><input type="text" class="form-control" placeholder="C.P."></div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="Ciudad" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="C.P." required>
+                            </div>
                         </div>
+                        
                         <hr class="my-4">
                         <h4 class="fw-bold mb-3">💳 Método de Pago</h4>
                         <div class="form-check mb-2"><input class="form-check-input" type="radio" name="m" checked> Tarjeta de Crédito</div>
                         <div class="form-check mb-2"><input class="form-check-input" type="radio" name="m"> PayPal</div>
                         <div class="form-check mb-4"><input class="form-check-input" type="radio" name="m"> Bizum</div>
                         
-                        <button type="button" class="btn btn-success btn-lg w-100 shadow-sm" onclick="finalizarCompra()">
+                        <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm">
                             Confirmar y Pagar
                         </button>
                     </form>
@@ -51,7 +58,32 @@
             </div>
         </div>
     </div>
-
-	<script th:src="@{/js/funciones.js}"></script>
+    
+    <script>
+        // Buscamos el formulario de la página
+        const formulario = document.querySelector('form');
+        
+        
+        formulario.addEventListener('submit', function(event) {
+            
+            // 1. Frenamos el envío automático para que dé tiempo a sacar el mensaje
+            event.preventDefault();
+            
+            // 2. Mensaje verde de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Pago completado!',
+                text: 'Tu pedido está en camino. Gracias por confiar en Ecommerce Web.',
+                confirmButtonColor: '#198754',
+                confirmButtonText: 'Volver a la tienda'
+            }).then((result) => {
+                
+                if (result.isConfirmed) {
+                    window.location.href = '/';
+                }
+            });
+        });
+    </script>
+	
 </body>
 </html>

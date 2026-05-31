@@ -11,7 +11,7 @@ public class Categoria {
 
     private String nombre;
 
-    // Relación: Una categoría tiene muchos productos 
+    // Una categoría tiene muchos productos 
     @OneToMany(mappedBy = "categoria")
     private List<Producto> productos;
 

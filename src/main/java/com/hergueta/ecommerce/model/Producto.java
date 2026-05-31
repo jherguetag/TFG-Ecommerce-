@@ -14,10 +14,12 @@ public class Producto {
     private String descripcion;
     private Double precio;
     private String imagen;
- // Muchos productos pertenecen a una categoría [cite: 15]
+ // Muchos productos pertenecen a una categoría 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
+    
+    private Double valoracion;
 
     // Constructor vacío (Obligatorio para Hibernate/JPA)
     public Producto() {
@@ -50,4 +52,7 @@ public class Producto {
     
     public Categoria getCategoria() { return categoria; }
     public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+    
+    public Double getValoracion() {return valoracion;}
+    public void setValoracion(Double valoracion) {this.valoracion = valoracion;}
 }
