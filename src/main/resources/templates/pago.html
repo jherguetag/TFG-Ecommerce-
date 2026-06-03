@@ -47,14 +47,22 @@
             
             <div class="col-md-4">
                 <div class="card p-4 shadow-sm border-0 bg-dark text-white text-center">
-                    <h5 class="text-secondary">Resumen</h5>
+                    <h5 class="text-secondary">Resumen del Pedido</h5>
                     <hr class="border-secondary">
-					<img th:src="${producto.imagen}" alt="Producto" class="img-fluid rounded mb-3 bg-white p-2" style="max-height: 160px; width: 100%; object-fit: contain;">
-                    <p class="mb-1" th:text="${producto.nombre}"></p>
-                    <h2 class="fw-bold text-success" th:text="${producto.precio} + ' €'"></h2>
+                    
+                    <div th:each="detalle : ${carrito.detalles}" class="d-flex justify-content-between text-start mb-2 pb-2 border-bottom border-secondary">
+                        <span class="small text-light text-truncate pe-2" th:text="${detalle.cantidad} + 'x ' + ${detalle.producto.nombre}"></span>
+                        <span class="small text-success fw-bold" th:text="${detalle.producto.precio} + ' €'"></span>
+                    </div>
+                    
+                    <div class="mt-4 text-end">
+                        <span class="text-secondary small">Total a pagar:</span>
+                        <h2 class="fw-bold text-success" th:text="${total} + ' €'"></h2>
+                    </div>
                 </div>
+                
                 <div class="text-center mt-3">
-                    <a href="/" class="text-muted text-decoration-none small">← Cancelar compra</a>
+                    <a href="/carrito" class="text-muted text-decoration-none small">← Volver al carrito</a>
                 </div>
             </div>
         </div>

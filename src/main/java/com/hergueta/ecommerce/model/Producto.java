@@ -20,8 +20,13 @@ public class Producto {
     private Categoria categoria;
     
     private Double valoracion;
+    
+    @OneToMany(mappedBy = "producto")
+    private java.util.List<Resena> resenas;
 
-    // Constructor vacío (Obligatorio para Hibernate/JPA)
+   
+
+	// Constructor vacío (Obligatorio para Hibernate/JPA)
     public Producto() {
     }
 
@@ -55,4 +60,12 @@ public class Producto {
     
     public Double getValoracion() {return valoracion;}
     public void setValoracion(Double valoracion) {this.valoracion = valoracion;}
+    
+    public java.util.List<Resena> getResenas() {
+		return resenas;
+	}
+
+	public void setResenas(java.util.List<Resena> resenas) {
+		this.resenas = resenas;
+	}
 }
