@@ -12,6 +12,12 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+    private String direccion;
+    
+    
+	private java.time.LocalDate fechaEntrega; 
+    
+    private Double total;
 
     private String estado; // "CARRITO" o "COMPLETADO"
 
@@ -29,4 +35,28 @@ public class Pedido {
     public void setEstado(String estado) { this.estado = estado; }
     public List<DetallePedido> getDetalles() { return detalles; }
     public void setDetalles(List<DetallePedido> detalles) { this.detalles = detalles; }
+    
+    public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public java.time.LocalDate getFechaEntrega() {
+		return fechaEntrega;
+	}
+
+	public void setFechaEntrega(java.time.LocalDate fechaEntrega) {
+		this.fechaEntrega = fechaEntrega;
+	}
+
+	public Double getTotal() {
+		return total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
+	}
 }

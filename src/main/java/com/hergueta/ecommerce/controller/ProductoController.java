@@ -65,12 +65,19 @@ public class ProductoController {
     // --- LOGIN Y REGISTRO ---
     @GetMapping("/login")
     public String login() {
-        return "login"; // Spring Security usa este HTML para loguear
+        return "login"; // Muestra el login.html
     }
 
-    @PostMapping("/registrar")
+    // NUEVO: Muestra la pantalla separada de registro
+    @GetMapping("/registro")
+    public String mostrarRegistro() {
+        return "registro"; // Muestra el registro.html
+    }
+
+    // MODIFICADO: Procesa los datos cuando le dan a "Crear cuenta"
+    @PostMapping("/registro")
     public String registrar(@RequestParam String email, @RequestParam String pass) {
-        String passEncriptada = passwordEncoder.encode(pass); // ¡Contraseña encriptada y segura!
+        String passEncriptada = passwordEncoder.encode(pass); 
         Usuario nuevoUsuario = new Usuario(email, passEncriptada, "CLIENTE");
         usuarioRepository.save(nuevoUsuario);
         return "redirect:/login?registrado=true";

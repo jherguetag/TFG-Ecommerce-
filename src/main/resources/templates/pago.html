@@ -17,19 +17,25 @@
                 <div class="card p-4 shadow-sm border-0 mb-4">
                     <h4 class="fw-bold mb-3">📍 Datos de Envío</h4>
                     
-                    <form id="formPago">
+                    <form id="formPago" action="/checkout/procesar" method="post">
+                        
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Dirección de Entrega</label>
-                            <input type="text" class="form-control" placeholder="Calle, número, piso..." required>
+                            <input type="text" name="direccion" class="form-control" placeholder="Calle, número, piso..." required>
                         </div>
                         
-                        <div class="row mb-4">
+                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <input type="text" class="form-control" placeholder="Ciudad" required>
                             </div>
                             <div class="col-md-6">
                                 <input type="text" class="form-control" placeholder="C.P." required>
                             </div>
+                        </div>
+
+                        <div class="mb-4 border-start border-4 border-primary ps-3">
+                            <label class="form-label small fw-bold text-primary">📅 Fecha de entrega deseada</label>
+                            <input type="date" name="fechaEntrega" class="form-control shadow-sm" required>
                         </div>
                         
                         <hr class="my-4">
@@ -69,9 +75,7 @@
     </div>
     
     <script>
-        // Buscamos el formulario de la página
-        const formulario = document.querySelector('form');
-        
+        const formulario = document.getElementById('formPago');
         
         formulario.addEventListener('submit', function(event) {
             
@@ -84,15 +88,15 @@
                 title: '¡Pago completado!',
                 text: 'Tu pedido está en camino. Gracias por confiar en NovaTech.',
                 confirmButtonColor: '#198754',
-                confirmButtonText: 'Volver a la tienda'
+                confirmButtonText: 'Ver mis pedidos'
             }).then((result) => {
                 
                 if (result.isConfirmed) {
-                    window.location.href = '/';
+                    // CAMBIO 4: En lugar de usar window.location, ordenamos enviar el formulario a la base de datos
+                    formulario.submit();
                 }
             });
         });
     </script>
-	
 </body>
 </html>

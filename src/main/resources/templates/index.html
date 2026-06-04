@@ -9,27 +9,36 @@
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
 	    <div class="container">
-	        <a class="navbar-brand fw-bold" href="/">NOVATECH</a>
+	        <a class="navbar-brand fw-bold fs-4 text-white" href="/">NOVATECH</a>
+	        
 	        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuTienda">
 	            <span class="navbar-toggler-icon"></span>
 	        </button>
 	        
 	        <div class="collapse navbar-collapse" id="menuTienda">
-				<ul class="navbar-nav me-auto">
-				    <li class="nav-item"><a class="nav-link active" href="/">Catálogo</a></li>
-				</ul>
+	            <form action="/buscar" method="get" class="d-flex mx-auto w-50">
+	                <input class="form-control rounded-start border-0" type="search" name="palabra" placeholder="Buscar productos..." required>
+	                <button class="btn btn-primary rounded-end" type="submit">Buscar</button>
+	            </form>
 
-				<a sec:authorize="isAnonymous()" href="/login" class="btn btn-outline-light btn-sm me-3">Iniciar Sesión</a>
+	            <div class="d-flex align-items-center ms-auto gap-3">
+	                
+	                <div sec:authorize="isAnonymous()" class="d-flex gap-2">
+	                    <a href="/login" class="btn btn-outline-light btn-sm fw-bold">Entrar</a>
+	                    <a href="/registro" class="btn btn-primary btn-sm fw-bold">Registrarse</a>
+	                </div>
 
-				<a sec:authorize="isAuthenticated()" href="/logout" class="btn btn-outline-danger btn-sm ms-2 me-3">Cerrar Sesión</a>
-
-				<a sec:authorize="isAuthenticated()" href="/carrito" class="btn btn-warning btn-sm text-dark fw-bold me-3">🛒 Mi Carrito</a>
-				    
-				<form action="/buscar" method="get" class="d-flex">
-				    <input class="form-control form-control-sm me-2" type="search" name="palabra" placeholder="Buscar producto..." required>
-				    <button class="btn btn-success btn-sm" type="submit">Buscar</button>
-				</form>
-				</div>
+	                <a sec:authorize="isAuthenticated()" href="/pedidos" class="text-white text-decoration-none fw-bold">
+	                    Mis Pedidos
+	                </a>
+	                
+	                <a sec:authorize="isAuthenticated()" href="/carrito" class="btn btn-warning btn-sm fw-bold d-flex align-items-center text-dark">
+	                    🛒 Cesta
+	                </a>
+	                
+	                <a sec:authorize="isAuthenticated()" href="/logout" class="btn btn-outline-danger btn-sm">Salir</a>
+	            </div>
+	        </div>
 	    </div>
 	</nav>
 	
@@ -60,8 +69,12 @@
 
 						<h4 class="mt-auto text-primary" th:text="${producto.precio} + ' €'">0.00 €</h4>
                         
-						<button th:onclick="'agregarAlCarrito(' + ${producto.id} + ', this)'" class="btn btn-success w-100 mt-2">
-						    Añadir al Carrito
+						<button sec:authorize="isAnonymous()" onclick="pedirLogin()" class="btn btn-success w-100 mt-2">
+						    Añadir a la Cesta
+						</button>
+
+						<button sec:authorize="isAuthenticated()" th:onclick="'alternarCarrito(' + ${producto.id} + ', this)'" class="btn btn-success w-100 mt-2">
+						    Añadir a la Cesta
 						</button>
 
                         <div class="mt-3 border-top pt-2 text-start">
@@ -124,19 +137,46 @@
 	
 	
 	<script>
-	    function agregarAlCarrito(idProducto, boton) {
-	        // Envia la petición al servidor sin recargar la página
-	        fetch('/carrito/add/' + idProducto, { method: 'POST' })
-	        .then(response => {
-	            if(response.ok) {
-	                // Cambiamos el botón para que el usuario sepa que funcionó
-	                boton.innerText = '✅ Añadido';
-	                boton.classList.replace('btn-success', 'btn-secondary');
-	                boton.disabled = true;
-	            } else {
-	                alert('Hubo un error al añadir el producto');
+	    // Función 1: Alerta para invitados
+	    function pedirLogin() {
+	        Swal.fire({
+	            icon: 'warning',
+	            title: 'Acceso exclusivo',
+	            text: 'Necesitas iniciar sesión para añadir productos a la cesta.',
+	            showCancelButton: true,
+	            confirmButtonText: 'Ir a Entrar',
+	            cancelButtonText: 'Seguir mirando',
+	            confirmButtonColor: '#0d6efd'
+	        }).then((result) => {
+	            if (result.isConfirmed) {
+	                window.location.href = '/login';
 	            }
 	        });
+	    }
+
+	    // Función 2: Añadir o Deshacer para clientes
+	    function alternarCarrito(idProducto, boton) {
+	        let estaAnadido = boton.classList.contains('btn-secondary');
+
+	        if (!estaAnadido) {
+	            // Añade al carrito
+	            fetch('/carrito/add/' + idProducto, { method: 'POST' })
+	            .then(response => {
+	                if(response.ok) {
+	                    boton.innerText = '✅ Añadido (Deshacer)';
+	                    boton.classList.replace('btn-success', 'btn-secondary');
+	                }
+	            });
+	        } else {
+	            // Quita del carrito
+	            fetch('/carrito/remove-producto/' + idProducto, { method: 'POST' })
+	            .then(response => {
+	                if(response.ok) {
+	                    boton.innerText = 'Añadir a la Cesta';
+	                    boton.classList.replace('btn-secondary', 'btn-success');
+	                }
+	            });
+	        }
 	    }
 	</script>
 </body>
