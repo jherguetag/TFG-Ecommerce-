@@ -23,17 +23,37 @@ public class CarritoController {
         model.addAttribute("carrito", carrito);
 
         // LÓGICA DE SUGERENCIAS INTELIGENTES:
-        if (carrito != null && carrito.getDetalles() != null && !carrito.getDetalles().isEmpty()) {
-            var categoriaDestacada = carrito.getDetalles().get(0).getProducto().getCategoria();
+if (carrito != null && carrito.getDetalles() != null && !carrito.getDetalles().isEmpty()) {
             
-            // Filtramos para obtener productos de la categoría QUE NO ESTÉN YA en el carrito
-            List<Producto> sugerencias = productoRepository.findByCategoria(categoriaDestacada);
+            // 1. Obtenemos SOLO las categorías de los productos que hay en la cesta
+            List<Categoria> categoriasEnCarrito = carrito.getDetalles().stream()
+                    .map(d -> d.getProducto().getCategoria())
+                    .distinct() 
+                    .toList();
+            
+            // 2. Buscamos productos que pertenezcan ÚNICAMENTE a esas categorías
+            List<Producto> todasSugerencias = new java.util.ArrayList<>();
+            for (Categoria cat : categoriasEnCarrito) {
+                todasSugerencias.addAll(productoRepository.findByCategoria(cat));
+            }
+            
+            // 3. Obtenemos los IDs de lo que ya está en la cesta para no repetirlo
             List<Long> idsEnCarrito = carrito.getDetalles().stream()
-                                            .map(d -> d.getProducto().getId())
-                                            .toList();
+                    .map(d -> d.getProducto().getId())
+                    .toList();
             
-            sugerencias.removeIf(p -> idsEnCarrito.contains(p.getId()));
-            model.addAttribute("sugerencias", sugerencias);
+            // 4. Filtramos los que ya están
+            todasSugerencias.removeIf(p -> idsEnCarrito.contains(p.getId()));
+            
+            //  MEZCLAMOS LAS CATEGORÍAS 
+            java.util.Collections.shuffle(todasSugerencias);
+
+            // Sacamos los productos
+            List<Producto> sugerenciasFinales = todasSugerencias.stream()
+                    .distinct()
+                    .toList();
+
+            model.addAttribute("sugerencias", sugerenciasFinales);
         }
         
         return "carrito";

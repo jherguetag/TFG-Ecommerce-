@@ -2,7 +2,7 @@ package com.hergueta.ecommerce.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "resenas")
+@Table(name = "resena")
 public class Resena {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
