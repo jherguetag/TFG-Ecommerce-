@@ -27,16 +27,21 @@
                     <textarea th:field="*{descripcion}" class="form-control" rows="2" placeholder="Características principales..."></textarea>
                 </div>
                 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Precio (€)</label>
-                        <input type="number" step="0.01" th:field="*{precio}" class="form-control" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Categoría (ID)</label>
-                        <input type="text" class="form-control" placeholder="Electrónica">
-                    </div>
-                </div>
+				<div class="row">
+				     <div class="col-md-6 mb-3">
+				          <label class="form-label fw-bold">Precio (€)</label>
+				          <input type="number" step="0.01" th:field="*{precio}" class="form-control" required>
+				  	</div>
+				 <div class="col-md-6 mb-3">
+				           <label class="form-label fw-bold">Categoría</label>
+				             <select name="categoria.id" class="form-select border-secondary" required>
+				                  <option value="1" th:selected="${producto.categoria != null && producto.categoria.id == 1}">Informática</option>
+				                  <option value="2" th:selected="${producto.categoria != null && producto.categoria.id == 2}">Smartphones</option>
+				                  <option value="3" th:selected="${producto.categoria != null && producto.categoria.id == 3}">Smart Home</option>
+				                  <option value="4" th:selected="${producto.categoria != null && producto.categoria.id == 4}">Wearables</option>
+				             </select>
+				    </div>
+				</div>
                 
                 <div class="row">
                     <div class="col-md-8 mb-4">
@@ -48,6 +53,11 @@
                         <input type="number" step="0.1" min="1" max="5" th:field="*{valoracion}" class="form-control" placeholder="Ej: 4.5">
                     </div>
                 </div>
+				
+				<div class="mb-3">
+				          <label class="form-label text-primary fw-bold">Stock Disponible</label>
+				           <input type="number" th:field="*{stock}" class="form-control border-primary" placeholder="Ej: 50" min="0" required>
+				      </div>
 
 				<button type="submit" class="btn btn-success btn-lg w-100" 
 				        th:text="${producto.id == null ? 'Registrar en Base de Datos' : 'Guardar Cambios'}">

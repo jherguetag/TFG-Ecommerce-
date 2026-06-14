@@ -14,6 +14,9 @@ public class Producto {
     private String descripcion;
     private Double precio;
     private String imagen;
+    
+    @Column(name = "stock")
+    private Integer stock;
  // Muchos productos pertenecen a una categoría 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
@@ -68,4 +71,12 @@ public class Producto {
 	public void setResenas(java.util.List<Resena> resenas) {
 		this.resenas = resenas;
 	}
+	
+	public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
 }

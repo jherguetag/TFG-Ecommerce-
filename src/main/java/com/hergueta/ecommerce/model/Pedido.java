@@ -59,4 +59,6 @@ public class Pedido {
 	public void setTotal(Double total) {
 		this.total = total;
 	}
+	
+	
 }

@@ -32,6 +32,17 @@
                 <h2 class="fw-bold text-primary">📦 Panel de Administración</h2>
                 <a href="/admin/nuevo" class="btn btn-primary px-4">+ Añadir Producto</a>
             </div>
+			
+			<div th:if="${not #lists.isEmpty(alertasStock)}" class="alert alert-warning alert-dismissible fade show shadow-sm mb-4 border-warning" role="alert">
+			                    <h5 class="alert-heading fw-bold text-dark">⚠️ ¡Aviso de Reposición!</h5>
+			                    <p class="mb-2 text-dark">Los siguientes productos se están agotando y necesitan más stock:</p>
+			                    <ul class="mb-0 text-dark">
+			                        <li th:each="prod : ${alertasStock}">
+			                            <strong th:text="${prod.nombre}"></strong> - Quedan solo <span th:text="${prod.stock}" class="text-danger fw-bold"></span> uds.
+			                        </li>
+			                    </ul>
+			                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+			                </div>
             
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
@@ -40,6 +51,7 @@
                             <th>ID</th>
                             <th>Producto</th>
                             <th>Precio</th>
+							<th>Stock</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -48,9 +60,18 @@
                             <td class="fw-bold" th:text="${producto.id}"></td>
                             <td th:text="${producto.nombre}"></td>
                             <td class="text-success fw-bold" th:text="${producto.precio} + ' €'"></td>
+							
+							<td>
+							        <span th:text="${producto.stock != null ? producto.stock : '0'}" 
+							              th:class="${producto.stock != null && producto.stock <= 10 ? 'text-danger fw-bold' : ''}">
+							            50
+							        </span>
+							        <span class="small text-muted"> uds.</span>
+							    </td>
+								
                             <td class="text-center">
 								<a th:href="@{/admin/editar/{id}(id=${producto.id})}" class="btn btn-warning btn-sm rounded-pill px-3">Editar</a>
-                                <a th:href="@{/admin/eliminar/{id}(id=${producto.id})}" class="btn btn-danger btn-sm rounded-pill px-3">Eliminar</a>
+                                <a th:href="@{/admin/eliminar/{id}(id=${producto.id})}" class="btn btn-danger btn-sm rounded-pill px-3" onclick="return confirm('⚠️ ¿Estás seguro de que quieres eliminar este producto? Esta acción no se puede deshacer.');">Eliminar</a>
                             </td>
                         </tr>
                     </tbody>

@@ -1,6 +1,8 @@
 package com.hergueta.ecommerce.controller;
 
 import java.security.Principal;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -33,13 +35,28 @@ public class ProductoController {
     // Ya no hay "if", Spring Security bloquea a los que no son ADMIN antes de llegar aquí
     @GetMapping("/admin")
     public String panelAdmin(Model model) {
-        model.addAttribute("productos", productoRepository.findAll());
+        // 1. Sacamos todos los productos de la base de datos
+        List<Producto> todosLosProductos = productoRepository.findAll();
+        
+        // 2. Filtramos SOLO los que tienen 10 o menos de stock
+        List<Producto> alertasStock = todosLosProductos.stream()
+                .filter(p -> p.getStock() != null && p.getStock() <= 10)
+                .toList();
+        
+        // 3. Mandamos las dos listas a la pantalla
+        model.addAttribute("productos", todosLosProductos);
+        model.addAttribute("alertasStock", alertasStock);
+        
         return "admin";
     }
 
     @GetMapping("/admin/nuevo")
     public String formularioNuevo(Model model) {
-        model.addAttribute("producto", new Producto());
+        Producto nuevoProducto = new Producto();
+        
+        nuevoProducto.setStock(50); 
+        
+        model.addAttribute("producto", nuevoProducto);
         return "formulario";
     }
 

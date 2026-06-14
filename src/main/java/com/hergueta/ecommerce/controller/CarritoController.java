@@ -180,7 +180,28 @@ if (carrito != null && carrito.getDetalles() != null && !carrito.getDetalles().i
             }
             carrito.setTotal(total);
             
-            // ¡MAGIA! Cambiamos el estado. Ya no es un carrito, es un pedido en firme.
+            for (DetallePedido detalle : carrito.getDetalles()) {
+                Producto producto = detalle.getProducto();
+                
+                
+                if (producto.getStock() == null) {
+                    producto.setStock(50);
+                }
+                
+                // Restamos los que se llevan
+                Integer nuevoStock = producto.getStock() - detalle.getCantidad();
+                
+                // Evitamos stocks negativos
+                if (nuevoStock < 0) {
+                    nuevoStock = 0;
+                }
+                
+                // Aplicamos y guardamos en la base de datos
+                producto.setStock(nuevoStock);
+                productoRepository.save(producto);
+            }
+            
+            
             carrito.setEstado("EN CAMINO"); 
             pedidoRepository.save(carrito);
         }
@@ -188,7 +209,7 @@ if (carrito != null && carrito.getDetalles() != null && !carrito.getDetalles().i
     }
 
     // 2. Muestra la página de historial (Mis Pedidos)
- // Muestra la página de historial (Mis Pedidos) con actualización automática
+ 
     @GetMapping("/pedidos")
     public String verPedidos(Model model, Principal principal) {
         Usuario usuario = usuarioRepository.findByEmail(principal.getName());
@@ -198,8 +219,8 @@ if (carrito != null && carrito.getDetalles() != null && !carrito.getDetalles().i
                 .filter(p -> p.getUsuario().getId().equals(usuario.getId()) && !p.getEstado().equals("CARRITO"))
                 .toList();
 
-        // 2. MAGIA DEL TIEMPO: Comprobamos si alguno ya debería estar entregado
-        java.time.LocalDate hoy = java.time.LocalDate.now(); // Qué día es hoy en la vida real
+        // 2. Comprobamos si alguno ya debería estar entregado
+        java.time.LocalDate hoy = java.time.LocalDate.now(); 
         
         for (Pedido pedido : misPedidos) {
             // Si el pedido pone "EN CAMINO", pero la fecha de entrega ya es HOY o fue en el PASADO
@@ -212,7 +233,7 @@ if (carrito != null && carrito.getDetalles() != null && !carrito.getDetalles().i
             }
         }
 
-        // 3. Mandamos la lista (ya actualizada) a la pantalla
+        // 3. Mandamos la lista actualizada
         model.addAttribute("pedidos", misPedidos);
         return "pedidos";
     }
